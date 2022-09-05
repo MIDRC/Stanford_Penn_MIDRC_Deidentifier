@@ -41,6 +41,4 @@ foo@bar:~$ python main.py --input_file_path ./reports_stanford.npy --output_file
 
 References
 ---
-1)  For information on MIDRC GitHub documentation and best practices, please see https://midrc.atlassian.net/wiki/spaces/COMMITTEES/pages/672497665/MIDRC+GitHub+Best+Practices
-2)	U-Net: Convolutional Networks for Biomedical Image Segmentation https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/
-3)  Laboratory and University Name that develops the algorithm.
+Manuscript currently in proceedings.
