@@ -16,6 +16,11 @@ foo@bar:~$ cd Stanford_Penn_Deidentifier
 ```
 
 Then, make sure you are in a Python virtualenv or conda environment where torch is already installed: otherwise, follow the instructions of https://pytorch.org/.
+
+```bat
+foo@bar:~$ pip show torch
+```
+
 Once torch is installed, you can run the command:
 
 ```bat
