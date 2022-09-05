@@ -35,7 +35,7 @@ foo@bar:~$ python main.py [-h] --device_list DEVICE_LIST [DEVICE_LIST ...]
 
 As an example, you could run:
 
-```console
+```bat
 foo@bar:~$ python main.py --input_file_path ./reports_stanford.npy --output_file_path ./reports_stanford_deidentified.npy --device cuda:0 cuda:1 cuda:2 --hospital_list stanford washington
 ```
 
