@@ -49,11 +49,11 @@ The hide-in-plain-sight algorithm generates synthetic PHI in-place of the origin
 
 - Firstnames. Go to https://data.world/len/us-first-names-database/workspace/file?filename=SSA_Names_DB.xlsx and download the file "SSA_Names_DB.xlsx". Then replace the existing file of this repo, already named "SSA_Names_DB.xlsx", with this new file. 
 
-- Vendors/Companies. You can find good examples at 'https://golden.com/list-of-healthcare-companies/’ and then insert them in the file "companies.txt".
+- Vendors/Companies. You can find good examples at https://golden.com/list-of-healthcare-companies/ and then insert them in the file "companies.txt".
 
-- Hospitals. You can find good examples at 'https://www.hospitalsafetygrade.org/all-hospitals’ and then insert them in the file "hospitals.txt".
+- Hospitals. You can find good examples at https://www.hospitalsafetygrade.org/all-hospitals and then insert them in the file "hospitals.txt".
 
-- Universities. You can find good examples at 'https://en.wikipedia.org/wiki/Lists_of_American_universities_and_colleges’ and then insert them in the file "universities.txt".
+- Universities. You can find good examples at https://en.wikipedia.org/wiki/Lists_of_American_universities_and_colleges and then insert them in the file "universities.txt".
 
 # References
 ---
