@@ -1,22 +1,16 @@
-# A Template Model 
+# Stanford & Penn Deidentifier
 
-**MIDRC TDP or CRP number and title** (with link to corresponding midrc.org page)
+This deidentifier was developped on radiology reports to automate the de-identification process, before using the reports in a research project or sharing them with other teams or institutions. It was also tested on other types of clinical notes and demonstrated high performance, as underlined in the associated publication.
 
-**Development Team**: names (and emails if desired) of individuals associated with the project
+This project was made possible by MIDRC and part of **MIDRC CRP 1 - Natural language processing of radiology reports for COVID-19** (https://www.midrc.org/midrc-collaborating-research-projects/project-one-crp1).
 
-Problem Definition:....
+**Development Team**: Pierre Chambon (Stanford University), Tessa S. Cook (Penn University), Curtis P. Langlotz (Stanford University).
 
-**Modality**: CT, X-ray, Clinical Data
+# Getting the model running
 
-**Requirements**: (e.g., Python, Tensorflow Keras API, OpenCV, Numpy)
-
-An image summarizes the proposed algorithm 
-![](out.png)
-
-**Repo Content Description**: A description of the types of files, code, and/or data included in the repo, as well as instructions on how to operate or utilize the files as appropriate.
-
-**Example Commands**: Please provide example scripts to run the algorithm, either as a script here or as a link to a Jupyter notebook that demonstrates how to use the code. 
-
+```console
+hey
+```
 
 References
 ---
