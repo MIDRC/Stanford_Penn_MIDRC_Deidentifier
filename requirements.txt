@@ -1,0 +1,5 @@
+numpy==1.23.1
+openpyxl==3.0.10
+pandas==1.4.3
+transformers==4.21.1
+xlrd==2.0.1
