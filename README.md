@@ -41,7 +41,7 @@ As an example, you could run:
 foo@bar:~$ python main.py --input_file_path ./reports_stanford.npy --output_file_path ./reports_stanford_deidentified.npy --device cuda:0 cuda:1 cuda:2 --hospital_list stanford washington
 ```
 
-# Having good synthetic PHI
+# Generating good-looking synthetic PHI
 
 The hide-in-plain-sight algorithm generates synthetic PHI in-place of the original and detected PHI. To do so, it relies on data sets of PHI examples, for each category. This repo contains the data files for each category but with very limited data in them. You can either modify them manually, and insert whatever examples of names or hospitals you wish, or rely on the following online resources to get good data sets of synthetic PHI:
 
