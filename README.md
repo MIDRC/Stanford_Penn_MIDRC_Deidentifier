@@ -21,7 +21,7 @@ Then, make sure you are in a Python virtualenv or conda environment where torch 
 foo@bar:~$ pip show torch
 ```
 
-Once torch is installed, you can run the command:
+Once you can confirm that torch is installed, you can run the command:
 
 ```bat
 foo@bar:~$ pip install -r requirements.txt
