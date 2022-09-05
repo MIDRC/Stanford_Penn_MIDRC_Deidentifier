@@ -9,15 +9,15 @@ This project was made possible by MIDRC and part of **MIDRC CRP 1 - Natural lang
 # Getting the model running
 
 ```console
-git clone https://github.com/MIDRC/Stanford_Penn_Deidentifier.git
-cd Stanford_Penn_Deidentifier
+foo@bar:~$ git clone https://github.com/MIDRC/Stanford_Penn_Deidentifier.git
+foo@bar:~$ cd Stanford_Penn_Deidentifier
 ```
 
 Then, make sure you are in a Python virtualenv or conda environment where torch is already installed: otherwise, follow the instructions of https://pytorch.org/.
 Once torch is installed, you can run the command:
 
 ```console
-pip install -r requirements.txt
+foo@bar:~$ pip install -r requirements.txt
 ```
 
 You should be set up to make the model work. To run the model on your own reports, you need to put the reports, represented as a python string array, in a .npy file. The deidentifier will put the deidentified reports in another .npy file, along a .csv file with more info that can be useful for a human review of the deidentified reports (prior to sharing or public release).
@@ -25,7 +25,7 @@ You should be set up to make the model work. To run the model on your own report
 To run the model, you only need the command:
 
 ```console
-python main.py [-h] --device_list DEVICE_LIST [DEVICE_LIST ...]
+foo@bar:~$ python main.py [-h] --device_list DEVICE_LIST [DEVICE_LIST ...]
                [--num_workers NUM_WORKERS] [--num_cpu_processes NUM_CPU_PROCESSES]
                [--batch_size BATCH_SIZE] --input_file_path INPUT_FILE_PATH
                --output_file_path OUTPUT_FILE_PATH
@@ -35,8 +35,8 @@ python main.py [-h] --device_list DEVICE_LIST [DEVICE_LIST ...]
 
 As an example, you could run:
 
-```
-python main.py --input_file_path ./reports_stanford.npy --output_file_path ./reports_stanford_deidentified.npy --device cuda:0 cuda:1 cuda:2 --hospital_list stanford washington
+```console
+foo@bar:~$ python main.py --input_file_path ./reports_stanford.npy --output_file_path ./reports_stanford_deidentified.npy --device cuda:0 cuda:1 cuda:2 --hospital_list stanford washington
 ```
 
 References
