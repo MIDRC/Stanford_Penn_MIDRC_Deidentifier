@@ -8,7 +8,7 @@ This project was made possible by MIDRC and part of **MIDRC CRP 1 - Natural lang
 
 # Getting the model running
 
-```console
+```bat
 foo@bar:~$ git clone https://github.com/MIDRC/Stanford_Penn_Deidentifier.git
 foo@bar:~$ cd Stanford_Penn_Deidentifier
 ```
@@ -16,7 +16,7 @@ foo@bar:~$ cd Stanford_Penn_Deidentifier
 Then, make sure you are in a Python virtualenv or conda environment where torch is already installed: otherwise, follow the instructions of https://pytorch.org/.
 Once torch is installed, you can run the command:
 
-```console
+```bat
 foo@bar:~$ pip install -r requirements.txt
 ```
 
@@ -24,7 +24,7 @@ You should be set up to make the model work. To run the model on your own report
 
 To run the model, you only need the command:
 
-```console
+```bat
 foo@bar:~$ python main.py [-h] --device_list DEVICE_LIST [DEVICE_LIST ...]
                [--num_workers NUM_WORKERS] [--num_cpu_processes NUM_CPU_PROCESSES]
                [--batch_size BATCH_SIZE] --input_file_path INPUT_FILE_PATH
