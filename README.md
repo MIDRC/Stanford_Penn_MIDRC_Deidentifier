@@ -1,6 +1,6 @@
 # Stanford & Penn Deidentifier
 
-<img src="Fig1.jpg" alt="Deidentification task" width="1000"/>
+<img src="Fig1.jpg" alt="Deidentification task" width="700"/>
 
 :hugs: Try out our model demo at https://huggingface.co/StanfordAIMI/stanford-deidentifier-base !
 
