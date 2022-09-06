@@ -1,5 +1,7 @@
 # Stanford & Penn Deidentifier
 
+![Deidentification task](Fig1.jpg)
+
 :hugs: Try out our model demo at https://huggingface.co/StanfordAIMI/stanford-deidentifier-base !
 
 This deidentifier was developped on radiology reports to automate the de-identification process, before using the reports in a research project or sharing them with other teams or institutions. It was also tested on other types of clinical notes and demonstrated high performance, as underlined in the associated publication.
