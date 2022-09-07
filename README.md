@@ -4,7 +4,7 @@
 
 :hugs: Try out our model demo at https://huggingface.co/StanfordAIMI/stanford-deidentifier-base !
 
-This deidentifier was developped on radiology reports to automate the de-identification process, before using the reports in a research project or sharing them with other teams or institutions. It was also tested on other types of clinical notes and demonstrated high performance, as underlined in the associated publication.
+This deidentifier was developped on radiology reports to automate the de-identification process, before using the reports in a research project or sharing them with other teams or institutions. It was also tested on other types of clinical notes and demonstrated high performance, as underlined in the associated publication. The project is meant for research purposes only.
 
 This project was made possible by MIDRC and part of **MIDRC CRP 1 - Natural language processing of radiology reports for COVID-19** (https://www.midrc.org/midrc-collaborating-research-projects/project-one-crp1).
 
