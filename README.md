@@ -1,4 +1,4 @@
-# Stanford & Penn Deidentifier
+# Stanford & Penn & MIDRC Deidentifier
 
 <img src="Fig1.jpg" alt="Deidentification task" width="700"/>
 
