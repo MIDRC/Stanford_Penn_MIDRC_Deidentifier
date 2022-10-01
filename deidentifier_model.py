@@ -49,7 +49,7 @@ def deidentifier_model(file_seed, device, num_workers, batch_size, hospitals, ve
         "VIN",
         "DEVICE",
         "WEB",
-        "IP",
+        # "IP",
         "BIOMETRIC",
         "PHOTO",
         "UNIQUE",
@@ -63,8 +63,8 @@ def deidentifier_model(file_seed, device, num_workers, batch_size, hospitals, ve
         report = report.replace("]]", "")
         report = report.strip()
 
-        for label in labels:
-            report = report.replace(label, "")
+        # for label in labels:
+        #    report = report.replace(label, "")
 
         reports[i] = report
 
@@ -938,10 +938,14 @@ def deidentifier_model(file_seed, device, num_workers, batch_size, hospitals, ve
     assert len(labeled_reports_reconstituated) == len(reports_save)
 
     with open("labeled_reports" + file_seed + ".npy", "wb") as f:
-        np.save(f, labeled_reports_reconstituated)
+        np.save(
+            f,
+            np.array(labeled_reports_reconstituated).astype("object"),
+            allow_pickle=True,
+        )
 
     with open("original_reports" + file_seed + ".npy", "wb") as f:
-        np.save(f, reports_save)
+        np.save(f, np.array(reports_save).astype("object"), allow_pickle=True)
 
     len(reports_save) == len(labeled_reports_reconstituated)
 
