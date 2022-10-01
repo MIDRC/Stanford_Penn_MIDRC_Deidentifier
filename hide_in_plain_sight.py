@@ -33,7 +33,7 @@ def hide_in_plain_sight(file_seed):
         "VIN",
         "DEVICE",
         "WEB",
-        "IP",
+        # "IP",
         "BIOMETRIC",
         "PHOTO",
         "UNIQUE",
@@ -524,7 +524,7 @@ def hide_in_plain_sight(file_seed):
             parsed_date = convert_string_to_date[date_format](date)
         except:
             try:
-                parsed_date = pd.to_datetime(date).to_pydatetime()
+                parsed_date = pd.to_datetime(date).to_pydatetime().replace(tzinfo=None)
             except:
                 # print('problem with parsing')
                 # print(date)
@@ -611,6 +611,19 @@ def hide_in_plain_sight(file_seed):
                     constraint.add_date(random_date)
                 if random.random() > 0.6:
                     generated_date = generated_date.replace("/", "-")
+
+                if date == generated_date:
+                    print("## special case")
+                    print(date, "##", generated_date)
+                    generated_date = convert_date_to_string[date_format](
+                        random_date + datetime.timedelta(days=random.randint(365, 720))
+                    )
+                    if constraint is not None:
+                        constraint.remove_last_added_date()
+                        constraint.add_date(random_date)
+                    if random.random() > 0.6:
+                        generated_date = generated_date.replace("/", "-")
+                    print("##", generated_date)
                 return generated_date
 
     class DateConstraint:
@@ -624,6 +637,10 @@ def hide_in_plain_sight(file_seed):
         def add_date(self, date):
             self.already_generated_dates.append(date)
             self.index += 1
+
+        def remove_last_added_date(self):
+            self.already_generated_dates.pop()
+            self.index -= 1
 
         def get_constraint(self):
             constraint = self.constraint_list[self.index]
@@ -672,7 +689,9 @@ def hide_in_plain_sight(file_seed):
                 parsed_date = convert_string_to_date[date_format](date)
             except:
                 try:
-                    parsed_date = pd.to_datetime(date).to_pydatetime()
+                    parsed_date = (
+                        pd.to_datetime(date).to_pydatetime().replace(tzinfo=None)
+                    )
                 except:
                     parsed_date = (
                         parsed_date_list[-1]
@@ -715,6 +734,7 @@ def hide_in_plain_sight(file_seed):
                 assert past_date is not None
 
                 if abs(current_date.year - past_date.year) > 15:
+                    current_date = current_date.replace(day=min(current_date.day, 28))
                     current_date = current_date.replace(
                         year=past_date.year + random.randint(1, 15)
                     )
@@ -739,7 +759,9 @@ def hide_in_plain_sight(file_seed):
                 parsed_date = convert_string_to_date[date_format](date)
             except:
                 try:
-                    parsed_date = pd.to_datetime(date).to_pydatetime()
+                    parsed_date = (
+                        pd.to_datetime(date).to_pydatetime().replace(tzinfo=None)
+                    )
                 except:
                     parsed_date = datetime.datetime.strptime(
                         "1/1/2010", "%m/%d/%Y"
@@ -748,15 +770,21 @@ def hide_in_plain_sight(file_seed):
                 parsed_date = parsed_date.replace(year=parsed_date.year + 100)
             if parsed_date.year == 2030:
                 continue
-            if (
-                min_date is None or parsed_date < min_date
-            ) and parsed_date.year != 1900:
-                min_date = parsed_date
-                min_index = index
-            if (
-                max_date is None or parsed_date > max_date
-            ) and parsed_date.year != 1900:
-                max_date = parsed_date
+            try:
+                if (
+                    min_date is None or parsed_date < min_date
+                ) and parsed_date.year != 1900:
+                    min_date = parsed_date
+                    min_index = index
+                if (
+                    max_date is None or parsed_date > max_date
+                ) and parsed_date.year != 1900:
+                    max_date = parsed_date
+            except:
+                print(min_date)
+                print(max_date)
+                print(parsed_date)
+                raise Exception("problem with datetime")
 
             index += 1
 
@@ -2456,7 +2484,7 @@ def hide_in_plain_sight(file_seed):
     def memorize_phi_lengths(fake_phi, length_memory, phi_memory):
         split_fake_phi = re.split(r"(\W)", fake_phi, flags=re.DOTALL)
         split_fake_phi = [x for x in split_fake_phi if x != " " and x != ""]
-        length_memory.append(len(split_fake_phi))
+        length_memory.append(len(fake_phi))
         phi_memory.append(fake_phi)
         return fake_phi
 
@@ -2684,25 +2712,25 @@ def hide_in_plain_sight(file_seed):
                 phi_memory[i] += re.sub(r"\\.+?\[\[.+?\]\]", "", x, flags=re.DOTALL)
 
             # CORRECT ERROR WITH DR.
-            if random.random() > 0.05:
-                if (
-                    re.findall(r"(?i)dr\.\.", deidentified_report, flags=re.DOTALL)
-                    != []
-                ):
-                    pass
-                    # print('dr.. SPOTTED')
-                deidentified_report = re.sub(
-                    r"(?i)dr\.\.",
-                    lambda match: match.group(0)[:-1],
-                    deidentified_report,
-                    flags=re.DOTALL,
-                )
-                for i, x in enumerate(phi_memory):
-                    if "dr.." in x.lower():
-                        # print('dr.. REPLACED')
-                        # print(count - 1)
-                        # print(deidentified_report)
-                        length_memory[i] -= 1
+            # if random.random() > 0.05 and phi == "HCW":
+            #    if (
+            #        re.findall(r"(?i)dr\.\.", deidentified_report, flags=re.DOTALL)
+            #        != []
+            #    ):
+            #        pass
+            #        # print('dr.. SPOTTED')
+            #    deidentified_report = re.sub(
+            #        r"(?i)dr\.\.",
+            #        lambda match: match.group(0)[:-1],
+            #        deidentified_report,
+            #        flags=re.DOTALL,
+            #    )
+            #    for i, x in enumerate(phi_memory):
+            #        if "dr.." in x.lower():
+            #            # print('dr.. REPLACED')
+            #            # print(count - 1)
+            #            # print(deidentified_report)
+            #            length_memory[i] -= 1
 
             length_memory_dict[phi] = length_memory
             length_memory_dict_mem[phi] = length_memory[:]
@@ -2738,8 +2766,66 @@ def hide_in_plain_sight(file_seed):
     #    assert "[[" not in deidentified_report
     #    assert "]]" not in deidentified_report
 
+    for report_index in range(len(labeled_reports)):
+        labeled_report = labeled_reports[report_index]
+        deidentified_report = deidentified_reports[report_index]
+        phi_length = phi_lengths[report_index]
+
+        labeled_report_index = 0
+        deidentified_report_index = 0
+        phi_length_index = 0
+
+        while labeled_report_index < len(labeled_report):
+            if labeled_report[labeled_report_index] != "\\":
+                try:
+                    assert (
+                        labeled_report[labeled_report_index]
+                        == deidentified_report[deidentified_report_index]
+                    )
+                except:
+                    print(labeled_report)
+                    print(deidentified_report)
+                    print(phi_length)
+                    raise Exception("problem here")
+                labeled_report_index += 1
+                deidentified_report_index += 1
+
+            else:
+                while (
+                    labeled_report[labeled_report_index : labeled_report_index + 2]
+                    != "[["
+                ):
+                    labeled_report_index += 1
+                labeled_report_index += 1
+                labeled_report_index += 1
+                labeled_phi = ""
+                while (
+                    labeled_report[labeled_report_index : labeled_report_index + 2]
+                    != "]]"
+                ):
+                    labeled_phi += labeled_report[labeled_report_index]
+                    labeled_report_index += 1
+                labeled_report_index += 1
+                labeled_report_index += 1
+
+                deidentified_phi = deidentified_report[
+                    deidentified_report_index : deidentified_report_index
+                    + phi_length[phi_length_index]
+                ]
+                try:
+                    assert labeled_phi != deidentified_phi
+                except:
+                    print(labeled_phi, "####", deidentified_phi)
+                    raise Exception("Problem here")
+
+                deidentified_report_index += phi_length[phi_length_index]
+                phi_length_index += 1
+
+        assert deidentified_report_index == len(deidentified_report)
+        assert phi_length_index == len(phi_length)
+
     with open("deidentified_reports" + file_seed + ".npy", "wb") as f:
-        np.save(f, deidentified_reports)
+        np.save(f, np.array(deidentified_reports).astype("object"), allow_pickle=True)
 
     with open("phi_lengths" + file_seed + ".npy", "wb") as f:
-        np.save(f, np.array(phi_lengths, dtype=object))
+        np.save(f, np.array(phi_lengths, dtype=object), allow_pickle=True)
