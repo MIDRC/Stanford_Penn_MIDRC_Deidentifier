@@ -37,6 +37,13 @@ def parse_args():
         help="Batch size for inference with the transformer model",
     )
     parser.add_argument(
+        "--max_number_of_reports_to_be_processed_in_parallel",
+        type=int,
+        default=50000,
+        help="Max number of reports to process in parallel, should be lowered if "
+        + "encountering memory issues, can be augmented if lots of remaining memory",
+    )
+    parser.add_argument(
         "--input_file_path",
         type=str,
         help="Path to input file, must be .npy",
@@ -93,23 +100,45 @@ def generate_output_files(file_seed_list, output_file_path):
 
     for file_seed in file_seed_list:
         with open("original_reports" + file_seed + ".npy", "rb") as f:
-            reports.extend(np.load(f, allow_pickle=True))
+            reports.append(np.load(f, allow_pickle=True))
         os.remove("original_reports" + file_seed + ".npy")
 
         with open("labeled_reports" + file_seed + ".npy", "rb") as f:
-            labeled_reports.extend(np.load(f, allow_pickle=True))
+            labeled_reports.append(np.load(f, allow_pickle=True))
         os.remove("labeled_reports" + file_seed + ".npy")
 
         with open("deidentified_reports" + file_seed + ".npy", "rb") as f:
-            deidentified_reports.extend(np.load(f, allow_pickle=True))
+            deidentified_reports.append(np.load(f, allow_pickle=True))
         os.remove("deidentified_reports" + file_seed + ".npy")
 
         with open("phi_lengths" + file_seed + ".npy", "rb") as f:
-            phi_lengths.extend(np.load(f, allow_pickle=True))
+            phi_lengths.append(np.load(f, allow_pickle=True))
         os.remove("phi_lengths" + file_seed + ".npy")
 
+    reports = np.concatenate(reports)
+    labeled_reports = np.concatenate(labeled_reports)
+    deidentified_reports = np.concatenate(deidentified_reports)
+    phi_lengths = np.concatenate(phi_lengths)
+
     with open(output_file_path, "wb") as f:
-        np.save(f, deidentified_reports)
+        np.save(f, deidentified_reports, allow_pickle=True)
+
+    print("finished writing the deidentified reports")
+
+    with open("deidentification_details_for_review_reports.npy", "wb") as f:
+        np.save(f, reports, allow_pickle=True)
+
+    with open("deidentification_details_for_review_labeled_reports.npy", "wb") as f:
+        np.save(f, labeled_reports, allow_pickle=True)
+
+    with open("deidentification_details_for_review_phi_lengths.npy", "wb") as f:
+        np.save(f, phi_lengths, allow_pickle=True)
+
+    print("Only task remaining is saving a .csv file for review purposes")
+    print("This step can take a long time, you can interrupt if needed")
+    print(
+        "All the data of the .csv file being written has already been saved in separate .npy files"
+    )
 
     df_for_review = pd.DataFrame(
         [reports, labeled_reports, deidentified_reports, phi_lengths]
@@ -143,64 +172,115 @@ def main(args):
 
     device_list = [torch.device(device) for device in device_list]
     file_seed_list = []
-    number_reports_per_file = len(reports) // len(device_list)
+    number_batches = (
+        len(reports) // args.max_number_of_reports_to_be_processed_in_parallel + 1
+    )
 
-    # Prepare files to be processed in each separate process
-    for i, device in enumerate(device_list):
-        file_seed = (
-            device.type
-            + "device"
-            + str(i)
-            + "device"
-            + str(random.randint(2394492340, 23944923402394492340))
+    for batch_index in range(number_batches):
+        file_seed_list_local = []
+
+        print(
+            "Processed so far",
+            args.max_number_of_reports_to_be_processed_in_parallel * batch_index,
+            "reports",
         )
-        file_seed_list.append(file_seed)
 
-        with open(
-            "original_reports" + file_seed + ".npy",
-            "wb",
-        ) as f:
-            np.save(
-                f,
-                reports[
-                    i
-                    * number_reports_per_file : (
-                        ((i + 1) * number_reports_per_file)
-                        if i + 1 < len(device_list)
-                        else len(reports)
-                    )
-                ],
+        number_reports_in_the_batch = (
+            args.max_number_of_reports_to_be_processed_in_parallel
+            if batch_index < number_batches - 1
+            else (
+                len(reports)
+                - args.max_number_of_reports_to_be_processed_in_parallel * batch_index
+            )
+        )
+
+        if number_reports_in_the_batch == 0:
+            assert batch_index == number_batches - 1
+            assert args.max_number_of_reports_to_be_processed_in_parallel == len(
+                reports
+            )
+            continue
+
+        number_reports_per_file = number_reports_in_the_batch // len(device_list)
+
+        # Prepare files to be processed in each separate process
+        for i, device in enumerate(device_list):
+            file_seed = (
+                device.type
+                + "device"
+                + str(i)
+                + "device"
+                + str(batch_index)
+                + "batch_index"
+                + str(random.randint(2394492340, 23944923402394492340))
             )
 
-    processes = []
+            if i + 1 < len(device_list) and number_reports_per_file == 0:
+                continue
 
-    for file_seed, device in zip(file_seed_list, device_list):
-        p = Process(
-            target=deidentifier_model_and_hide_in_plain_sight,
-            args=(
-                file_seed,
-                device,
-                args.num_workers,
-                args.batch_size,
-                args.hospital_list if args.hospital_list is not None else [],
-                args.vendor_list if args.vendor_list is not None else [],
-            ),
-        )
-        p.start()
-        processes.append(p)
-        # Running without parallelization
-        # deidentifier_model_and_hide_in_plain_sight(
-        # file_seed,
-        # device,
-        # args.num_workers,
-        # args.batch_size,
-        # args.hospital_list,
-        # args.vendor_list,
-        # )
-        pass
+            file_seed_list.append(file_seed)
+            file_seed_list_local.append(file_seed)
 
-    for p in processes:
-        p.join()
+            with open(
+                "original_reports" + file_seed + ".npy",
+                "wb",
+            ) as f:
+                np.save(
+                    f,
+                    np.array(
+                        reports[
+                            args.max_number_of_reports_to_be_processed_in_parallel
+                            * batch_index
+                            + i
+                            * number_reports_per_file : (
+                                (
+                                    args.max_number_of_reports_to_be_processed_in_parallel
+                                    * batch_index
+                                    + (i + 1) * number_reports_per_file
+                                )
+                                if i + 1 < len(device_list)
+                                else (
+                                    args.max_number_of_reports_to_be_processed_in_parallel
+                                    * batch_index
+                                    + number_reports_in_the_batch
+                                )
+                            )
+                        ]
+                    ).astype("object"),
+                    allow_pickle=True,
+                )
+
+        processes = []
+
+        for file_seed, device in zip(file_seed_list_local, device_list):
+            p = Process(
+                target=deidentifier_model_and_hide_in_plain_sight,
+                args=(
+                    file_seed,
+                    device,
+                    args.num_workers,
+                    args.batch_size,
+                    args.hospital_list if args.hospital_list is not None else [],
+                    args.vendor_list if args.vendor_list is not None else [],
+                ),
+            )
+            p.start()
+            processes.append(p)
+            # Running without parallelization
+            # deidentifier_model_and_hide_in_plain_sight(
+            # file_seed,
+            # device,
+            # args.num_workers,
+            # args.batch_size,
+            # args.hospital_list,
+            # args.vendor_list,
+            # )
+            # pass
+
+        for p in processes:
+            p.join()
+
+        time.sleep(30)  # giving time for the processes to be cleaned
 
     generate_output_files(file_seed_list, args.output_file_path)
 
