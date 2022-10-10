@@ -2816,7 +2816,10 @@ def hide_in_plain_sight(file_seed):
                     assert labeled_phi != deidentified_phi
                 except:
                     print(labeled_phi, "####", deidentified_phi)
-                    raise Exception("Problem here")
+                    print(
+                        "##### PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? #####"
+                    )
+                    # raise Exception("Problem here")
 
                 deidentified_report_index += phi_length[phi_length_index]
                 phi_length_index += 1
