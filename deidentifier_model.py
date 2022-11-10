@@ -59,8 +59,8 @@ def deidentifier_model(file_seed, device, num_workers, batch_size, hospitals, ve
     for i in range(len(reports)):
         report = reports[i]
         report = report.replace("\\", "")
-        report = report.replace("[[", "")
-        report = report.replace("]]", "")
+        report = report.replace("[", "")
+        report = report.replace("]", "")
         report = report.strip()
 
         # for label in labels:
