@@ -556,7 +556,8 @@ def hide_in_plain_sight(file_seed):
 
         if random_date is None or random_date == parsed_date:
             if random_date == parsed_date:
-                print("####Not supposed to happen ?")
+                #print("####Not supposed to happen ?")
+                pass
 
             random_date = generate_random_date(lower_boundary_date, upper_boundary_date)
 
@@ -2109,7 +2110,7 @@ def hide_in_plain_sight(file_seed):
             while are_uniques_equal(old_unique, unique):
                 count += 1
                 if count > 50:
-                    print(" problem unique")
+                    print(" unique")
                 unique = generate_random_unique(
                     already_used_unique, already_used_unique_more_frequent
                 )
@@ -2816,9 +2817,9 @@ def hide_in_plain_sight(file_seed):
                     assert labeled_phi != deidentified_phi
                 except:
                     print(labeled_phi, "####", deidentified_phi)
-                    print(
-                        "##### PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? #####"
-                    )
+                    # print(
+                    #     "##### PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? ########## PROBLEM HERE ? #####"
+                    # )
                     # raise Exception("Problem here")
 
                 deidentified_report_index += phi_length[phi_length_index]
