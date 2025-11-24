@@ -1,0 +1,71 @@
+version: 0.0.1
+
+tool:
+  name: Rad-De-ID
+  repo_url: https://github.com/MIDRC/Stanford_Penn_MIDRC_Deidentifier
+  tool_homepage: https://github.com/MIDRC/Stanford_Penn_MIDRC_Deidentifier
+  documentation_url: https://github.com/MIDRC/Stanford_Penn_MIDRC_Deidentifier/blob/master/README.md
+  tool_type: Script
+  tool_notes: De-identifier model - https://huggingface.co/StanfordAIMI/stanford-deidentifier-base
+
+llm:
+  usesLlm: false
+  bringOwnKey: false
+
+input:
+  - name: Imaging image 1
+    dataCategory: imaging
+    dataClass: image
+    dataType: radiology
+    format:
+      - dicom
+    dataStandard:
+      - dicom
+    proprietary: false
+    source: https://data.midrc.org/
+
+output:
+  - name: Imaging image 1
+    dataCategory: imaging
+    dataClass: image
+    dataType: radiology
+    format:
+      - dicom
+    dataStandard:
+      - dicom
+    proprietary: false
+    source: https://data.midrc.org/
+
+license:
+  license_type: Apache-2.0
+  link: https://github.com/MIDRC/Stanford_Penn_MIDRC_Deidentifier/blob/master/LICENSE
+
+funding:
+  source: Developed for MIDRC creation with NIBIB, and then generalized and converted to tool via ARPA-H BDF
+  agreement: Not specified
+  link: ""
+
+domains:
+  - Imaging
+
+credit:
+  - name: MIDRC
+    role: Developer
+    org: Medical Imaging and Data Resource Center
+    url: https://www.midrc.org/
+
+target_users:
+  primary_user:
+    user_type: researcher
+    technical_literacy_level:
+      - intermediate
+    biomedical_literacy_level:
+      - intermediate
+
+maturity:
+  beginning_maturity: 1
+  current_maturity: 9
+
+media: []
+
+collaborations: []

@@ -1,0 +1,49 @@
+
+name: Validate bdf.yaml
+
+on:
+    workflow_call: 
+        inputs:
+            python-version:
+                required: true
+                type: string
+                default: '3.9'
+            validation-branch:
+                required: false
+                type: string
+                default: 'main'
+            schema-url:
+              required: false
+              type: string
+              default: 'https://raw.githubusercontent.com/ARPA-H-BDF/bdfkb-schema/refs/heads/main/src/bdfkb_schema/schema/bdfkb_schema.yaml'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Checkout source repository (where validate.py lives)
+              uses: actions/checkout@v4
+              with:
+                repository: ARPA-H-BDF/bdfkb-schema
+                ref: ${{ inputs.validation-branch }}
+                path: validation-source
+
+            - name: Set up Python
+              uses: actions/setup-python@v4
+              with:
+                python-version: ${{ inputs.python-version }}
+                
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install linkml
+
+            - name: Validate yaml
+              run: |
+                python ./validation-source/src/validation/validate.py ${{inputs.schema-url}}
+
+            
