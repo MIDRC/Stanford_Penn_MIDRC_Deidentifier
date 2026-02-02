@@ -7,6 +7,9 @@ def hide_in_plain_sight(file_seed):
     import random
     import xlrd
     import openpyxl
+    from datetime import date
+
+    CONST_MAX_DATE = date.today().strftime("%m/%d/%Y")
 
     labeled_reports = None
     with open("labeled_reports" + file_seed + ".npy", "rb") as f:
@@ -790,7 +793,7 @@ def hide_in_plain_sight(file_seed):
             index += 1
 
         return max(min_date, datetime.datetime.strptime("1/1/2000", "%m/%d/%Y")), min(
-            max_date, datetime.datetime.strptime("1/1/2022", "%m/%d/%Y")
+            max_date, datetime.datetime.strptime(CONST_MAX_DATE, "%m/%d/%Y")
         )
 
     min_date, max_date = get_min_max_dates(
